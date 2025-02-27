@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Heart, ShoppingBag, Star, ChevronRight, ChevronDown, ChevronUp, ArrowLeft, Check } from 'lucide-react';
@@ -11,7 +10,6 @@ import { FeaturedProducts } from '@/components/FeaturedProducts';
 import { Product } from '@/components/ProductCard';
 import { useToast } from '@/hooks/use-toast';
 
-// Sample product data (in a real app, this would be fetched from an API)
 const productData: { [key: number]: Product } = {
   1: {
     id: 1,
@@ -40,7 +38,6 @@ const productData: { [key: number]: Product } = {
   }
 };
 
-// Recommended products
 const recommendedProducts: Product[] = [
   {
     id: 7,
@@ -93,7 +90,6 @@ const recommendedProducts: Product[] = [
   }
 ];
 
-// Sample reviews
 const reviews = [
   {
     id: 1,
@@ -141,14 +137,11 @@ const ProductDetail = () => {
   const [expandedAccordion, setExpandedAccordion] = useState<number | null>(0);
   const { toast } = useToast();
   
-  // In a real app, we would fetch product data from an API
   useEffect(() => {
-    // Simulate loading
     setTimeout(() => {
       if (id && productData[parseInt(id)]) {
         setProduct(productData[parseInt(id)]);
       } else {
-        // Fallback to first product if ID not found
         setProduct(productData[1]);
       }
       setIsLoaded(true);
@@ -158,7 +151,7 @@ const ProductDetail = () => {
   const handleQuantityChange = (increment: boolean) => {
     setQuantity(prev => {
       const newQuantity = increment ? prev + 1 : prev - 1;
-      return Math.max(1, newQuantity); // Ensure quantity doesn't go below 1
+      return Math.max(1, newQuantity);
     });
   };
   
@@ -241,7 +234,6 @@ const ProductDetail = () => {
       <Navbar />
       
       <div className="container mx-auto px-4 md:px-6 py-16 md:py-24">
-        {/* Breadcrumbs */}
         <div className="mb-8 animate-fade-in">
           <nav className="flex items-center text-sm">
             <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">Home</Link>
@@ -253,7 +245,6 @@ const ProductDetail = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
-          {/* Product Images */}
           <div className="space-y-4 animate-fade-in">
             <div className="aspect-square bg-white rounded-2xl overflow-hidden shadow-product hover:shadow-hover transition-shadow duration-300">
               <motion.img 
@@ -281,10 +272,8 @@ const ProductDetail = () => {
             </div>
           </div>
           
-          {/* Product Info */}
           <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
             <div className="flex flex-col h-full">
-              {/* Product Meta */}
               <div className="mb-2">
                 {product.isNew && (
                   <span className="inline-block px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary mb-2">
@@ -306,7 +295,6 @@ const ProductDetail = () => {
               <p className="text-lg text-muted-foreground">{product.brand}</p>
               <h1 className="text-3xl md:text-4xl font-medium tracking-tight mt-1 mb-4">{product.name}</h1>
               
-              {/* Ratings */}
               <div className="flex items-center mb-4">
                 <div className="flex items-center">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -321,7 +309,6 @@ const ProductDetail = () => {
                 <span className="text-sm text-muted-foreground">{product.reviewCount} reviews</span>
               </div>
               
-              {/* Price */}
               <div className="flex items-baseline mb-6">
                 {product.originalPrice && (
                   <span className="text-lg text-muted-foreground line-through mr-2">
@@ -339,12 +326,10 @@ const ProductDetail = () => {
                 )}
               </div>
               
-              {/* Description */}
               <p className="text-muted-foreground mb-6 max-w-md">
                 {product.description.split('.')[0]}.
               </p>
               
-              {/* Quantity */}
               <div className="mb-6">
                 <label htmlFor="quantity" className="block text-sm font-medium mb-2">
                   Quantity
@@ -375,7 +360,6 @@ const ProductDetail = () => {
                 </div>
               </div>
               
-              {/* Add to Cart */}
               <div className="flex flex-col md:flex-row gap-4 mb-8">
                 <Button 
                   size="lg" 
@@ -402,7 +386,6 @@ const ProductDetail = () => {
                 </Button>
               </div>
               
-              {/* Product Features */}
               <div className="space-y-3 mb-8">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 mt-1">
@@ -424,7 +407,6 @@ const ProductDetail = () => {
                 </div>
               </div>
               
-              {/* Accordion Sections */}
               <div className="border rounded-lg overflow-hidden mt-auto">
                 {accordionItems.map((item, index) => (
                   <div key={index} className="border-b last:border-b-0">
@@ -453,7 +435,6 @@ const ProductDetail = () => {
           </div>
         </div>
         
-        {/* Tabs Section */}
         <div className="mt-16 md:mt-24 animate-fade-in">
           <Tabs defaultValue="reviews" className="w-full">
             <TabsList className="w-full justify-start border-b rounded-none bg-transparent h-auto p-0">
@@ -504,7 +485,6 @@ const ProductDetail = () => {
                 
                 <Separator />
                 
-                {/* Reviews */}
                 <div className="space-y-6">
                   {reviews.map((review) => (
                     <div key={review.id} className="p-6 border rounded-lg bg-white">
@@ -635,7 +615,6 @@ const ProductDetail = () => {
           </Tabs>
         </div>
         
-        {/* Recommended Products */}
         <section className="mt-16 md:mt-24">
           <FeaturedProducts 
             title="You May Also Like" 

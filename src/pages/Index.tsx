@@ -9,9 +9,6 @@ import { Navbar } from '@/components/Navbar';
 import { FeaturedProducts } from '@/components/FeaturedProducts';
 import { Product } from '@/components/ProductCard';
 
-// Import framer-motion
-<lov-add-dependency>framer-motion@latest</lov-add-dependency>
-
 const newArrivals: Product[] = [
   {
     id: 1,
