@@ -307,7 +307,7 @@ const Homepage = () => {
             >
               <div className="relative aspect-square rounded-3xl overflow-hidden shadow-xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1680173086559-7ad3428b988c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjd8fGx1eHVyeSUyMHNraW5jYXJlfGVufDB8fDB8fHww" 
+                  src="forhero.webp" 
                   alt="Luxury skincare products" 
                   className="w-full h-full object-cover"
                 />
