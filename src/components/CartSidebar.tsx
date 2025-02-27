@@ -1,46 +1,87 @@
 
+import { useState } from 'react';
 import { ShoppingBag, X, Trash2, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 interface CartSidebarProps {
   open: boolean;
   onClose: () => void;
 }
 
-// Dummy cart items data
-const cartItems = [
-  {
-    id: 1,
-    name: "Radiance Renewal Serum",
-    brand: "Lumière",
-    price: 65,
-    quantity: 1,
-    image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2VydW18ZW58MHx8MHx8fDA%3D"
-  },
-  {
-    id: 2,
-    name: "Hydra-Glow Cream",
-    brand: "Lumière",
-    price: 48,
-    quantity: 1,
-    image: "https://images.unsplash.com/photo-1631730359585-38a4935cbec4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFjZSUyMGNyZWFtfGVufDB8fDB8fHww"
-  },
-  {
-    id: 3,
-    name: "Rose Petal Mist",
-    brand: "Lumière",
-    price: 28,
-    quantity: 1,
-    image: "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fGZhY2UlMjBtaXN0fGVufDB8fDB8fHww"
-  }
-];
+// Dummy cart item interface
+interface CartItem {
+  id: number;
+  name: string;
+  brand: string;
+  price: number;
+  quantity: number;
+  image: string;
+}
 
 export const CartSidebar = ({ open, onClose }: CartSidebarProps) => {
+  // Use state to track cart items so we can update them
+  const [cartItems, setCartItems] = useState<CartItem[]>([
+    {
+      id: 1,
+      name: "Radiance Renewal Serum",
+      brand: "Lumière",
+      price: 65,
+      quantity: 1,
+      image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2VydW18ZW58MHx8MHx8fDA%3D"
+    },
+    {
+      id: 2,
+      name: "Hydra-Glow Cream",
+      brand: "Lumière",
+      price: 48,
+      quantity: 1,
+      image: "https://images.unsplash.com/photo-1631730359585-38a4935cbec4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFjZSUyMGNyZWFtfGVufDB8fDB8fHww"
+    },
+    {
+      id: 3,
+      name: "Rose Petal Mist",
+      brand: "Lumière",
+      price: 28,
+      quantity: 1,
+      image: "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fGZhY2UlMjBtaXN0fGVufDB8fDB8fHww"
+    }
+  ]);
+  
+  const { toast } = useToast();
+  
   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   const shipping = 5.00;
   const total = subtotal + shipping;
+  
+  // Function to handle removing an item from the cart
+  const handleRemoveItem = (itemId: number) => {
+    const itemToRemove = cartItems.find(item => item.id === itemId);
+    
+    setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
+    
+    if (itemToRemove) {
+      toast({
+        title: "Item removed",
+        description: `${itemToRemove.name} has been removed from your cart.`,
+      });
+    }
+  };
+  
+  // Function to update item quantity
+  const handleUpdateQuantity = (itemId: number, increment: boolean) => {
+    setCartItems(prevItems => 
+      prevItems.map(item => {
+        if (item.id === itemId) {
+          const newQuantity = increment ? item.quantity + 1 : Math.max(1, item.quantity - 1);
+          return { ...item, quantity: newQuantity };
+        }
+        return item;
+      })
+    );
+  };
   
   return (
     <>
@@ -111,11 +152,18 @@ export const CartSidebar = ({ open, onClose }: CartSidebarProps) => {
                       </div>
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center border rounded-full overflow-hidden">
-                          <button className="px-2 py-1 hover:bg-secondary transition-colors">
+                          <button 
+                            className="px-2 py-1 hover:bg-secondary transition-colors"
+                            onClick={() => handleUpdateQuantity(item.id, false)}
+                            disabled={item.quantity <= 1}
+                          >
                             -
                           </button>
                           <span className="px-3">{item.quantity}</span>
-                          <button className="px-2 py-1 hover:bg-secondary transition-colors">
+                          <button 
+                            className="px-2 py-1 hover:bg-secondary transition-colors"
+                            onClick={() => handleUpdateQuantity(item.id, true)}
+                          >
                             +
                           </button>
                         </div>
@@ -123,6 +171,7 @@ export const CartSidebar = ({ open, onClose }: CartSidebarProps) => {
                           variant="ghost" 
                           size="icon" 
                           className="h-7 w-7 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                          onClick={() => handleRemoveItem(item.id)}
                         >
                           <Trash2 className="h-4 w-4" />
                           <span className="sr-only">Remove</span>
